@@ -235,6 +235,33 @@ public class DefaultExpressionParserEngine implements ExpressionParserEngine{
         }
         
         /**
+         * Returns a List of currently set {@link TokenReader TokenReaders}.
+         * 
+         * @return Possibly-empty List of TokenReaders.
+         */
+        public List<TokenReader> getTokenReaders(){
+            return tokenReaders;
+        }
+        
+        /**
+         * Returns a Map of currently set {@link Token Tokens} and {@link Operator Operators}.
+         * 
+         * @return Possibly-empty Map of Tokens and Operators.
+         */
+        public Map<Token, Operator> getOperators(){
+            return operators;
+        }
+        
+        /**
+         * Returns a List of currently set {@link ValueReader ValueReaders}.
+         * 
+         * @return Possibly-empty List of ValueReaders.
+         */
+        public List<ValueReader> getValueReaders(){
+            return valueReaders;
+        }
+        
+        /**
          * Adds a new {@link TokenReader TokenReader instance} to use by the {@link DefaultExpressionParserEngine}.
          * 
          * @param  tokenReader
