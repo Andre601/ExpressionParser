@@ -290,6 +290,7 @@ Should it not be such a token will null be returned instead.
 
 Now as a final step do we need to add the [Token], [TokenReader] and [ValueReader] into the [ExpressionTemplateParser] or [ExpressionTokenizer], depending on what it is.  
 We will use the [DefaultExpressionParserEngine] as it offers a Builder class to more easily add the necessary instances to use. Here is an example again:
+
 ```java
 import ch.andre601.expressionparser.DefaultExpressionParserEngine;
 import ch.andre601.expressionparser.ParseWarnCollector;
@@ -300,7 +301,7 @@ public class ConditionParser{
     private final DefaultExpressionParserEngine engine;
     
     public ConditionParser(){
-        engine = DefaultExpressionParserEngine.Builder.createDefault()
+        engine = DefaultExpressionParserEngine.DefaultBuilder.createDefault()
             .addTokenReader(new PlaceholderTokenReader(-20))
             .addValueReader(new PlaceholderReader())
             .build();

@@ -19,10 +19,12 @@
 
 package ch.andre601.expressionparser.tokens;
 
+import ch.andre601.expressionparser.DefaultExpressionParserEngine;
+
 /**
  * Class containing a collection of pre-made {@link Token Tokens}.
- * <br>These are used by the library in the {@link ch.andre601.expressionparser.DefaultExpressionParserEngine.Builder#createDefault() createDefault()}
- * method of the {@link ch.andre601.expressionparser.DefaultExpressionParserEngine.Builder Builder class}.
+ * <br>These are used by the library in the {@link DefaultExpressionParserEngine.DefaultBuilder#createDefault() createDefault()}
+ * method of the {@link DefaultExpressionParserEngine.DefaultBuilder Builder class}.
  */
 public class DefaultTokens{
     
