@@ -1,12 +1,18 @@
 # ExpressionParser
 
-ExpressionParser is a copy of the original expression parser made by @CodeCrafter47 for the [TabOverlayCommon] project used by his plugins [BungeeTabListPlus] and [AdvancedTabOverlay] and shared with his permission.
+ExpressionParser is a copy of the original expression parser made by [@CodeCrafter47][CodeCrafter47] for the [TabOverlayCommon] project used by his plugins [BungeeTabListPlus] and [AdvancedTabOverlay] and shared with his permission.
 
 It allows you to parse simple to complex expressions using Tokenization, while also allowing you to further extend and customize it.
 
+[CodeCrafter47]: https://github.com/CodeCrafter47/
 [TabOverlayCommon]: https://github.com/CodeCrafter47/TabOverlayCommon/
 [BungeeTabListPlus]: https://github.com/CodeCrafter47/BungeeTabListPlus
 [AdvancedTabOverlay]: https://github.com/CodeCrafter47/AdvancedTabOverlay
+
+## License
+
+This project is licensed under [GNU General Public License v3.0](./LICENSE) and as such is freely available for everyone.  
+Original credit and copyright goes to CodeCrafter47 for the original Expression parser system.
 
 ## How it works
 
@@ -278,7 +284,7 @@ public class PlaceholderReader extends ValueReader{
     public ExpressionTemplate read(ExpressionTemplateParser parser, List<Token> tokens, ParseWarnCollector collector){
         if(tokens.get(0) instanceof PlaceholderToken){
             PlaceholderToken token = (PlaceholderToken)tokens.remove(0);
-            return token.getValue()
+            return token.getValue();
         }
         
         return null;
@@ -301,7 +307,7 @@ public class ConditionParser{
     private final DefaultExpressionParserEngine engine;
     
     public ConditionParser(){
-        engine = DefaultExpressionParserEngine.DefaultBuilder.createDefault()
+        engine = new DefaultExpressionParserEngine.DefaultBuilder().createDefault()
             .addTokenReader(new PlaceholderTokenReader(-20))
             .addValueReader(new PlaceholderReader())
             .build();
@@ -345,8 +351,3 @@ You now have a working Placeholder token parser!
 [ToDoubleExpression]: ./src/main/java/ch/andre601/expressionparser/expressions/ToDoubleExpression.java
 [ToStringExpression]: ./src/main/java/ch/andre601/expressionparser/expressions/ToStringExpression.java
 [ConstantExpressionTemplate]: ./src/main/java/ch/andre601/expressionparser/templates/ConstantExpressionTemplate.java
-
-## License
-
-This project is licensed under [GNU General Public License v3.0](./LICENSE) and as such is freely availble for everyone.  
-Original credit and copyright goes to CodeCrafter47 for the original Expression parser system.
