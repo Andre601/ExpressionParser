@@ -82,7 +82,7 @@ repositories {
 }
 
 dependencies {
-  implementation "ch.andre601:ExpressionParser:{VERSION}
+  implementation "ch.andre601:ExpressionParser:{VERSION}"
 }
 ```
 
