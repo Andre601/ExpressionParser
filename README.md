@@ -41,6 +41,45 @@ As a final step is the List of [ExpressionTemplates][ExpressionTemplate] updated
 [ParseWarnCollector]: ./src/main/java/ch/andre601/expressionparser/ParseWarnCollector.java
 [ListOperator]: ./src/main/java/ch/andre601/expressionparser/operator/ListOperator.java
 
+## Getting the library
+
+> [!NOTE]
+> Replace `{VERSION}` with the latest available release tag in this repository
+> 
+> ![GitHub Tag](https://img.shields.io/github/v/tag/Andre601/ExpressionParser?style=flat-square&label=Latest%20Release)
+
+### Maven (pom.xml)
+
+```xml
+<repositories>
+  <repository>
+    <id>jitpack</id>
+    <url>https://jitpack.io/</url>
+  </repository>
+</repositories>
+
+<dependencies>
+  <dependency>
+    <groupId>ch.andre601</groupId>
+    <artifactId>ExpressionParser</artifactId>
+    <version>{VERSION}</version>
+    <scope>compile</scope> <!-- Includes the project -->
+  </dependency>
+</dependencies>
+```
+
+### Gradle (build.gradle)
+
+```groovy
+repositories {
+  maven { url = "https://jitpack.io/" }
+}
+
+dependencies {
+  implementation "ch.andre601:ExpressionParser:{VERSION}
+}
+```
+
 ## Adding own Operands
 
 This library allows you to create your own Operands to use in expressions, which will be explained here.  
@@ -56,7 +95,7 @@ public class PlaceholderToken extends Token{
     // This will later hold our parsed placeholder value.
     private final Placeholder value;
     
-    public PlaceholderToken(String value){
+    public PlaceholderToken(Placeholder value){
         super("PLACEHOLDER");
         this.value = value;
     }
