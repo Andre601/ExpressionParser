@@ -86,9 +86,9 @@ dependencies {
 }
 ```
 
-## Adding own Operands
+## Adding own Tokens
 
-This library allows you to create your own Operands to use in expressions, which will be explained here.  
+This library allows you to create your own Tokens which will be used when an expression is parsed.  
 For our example will we try to implement the placeholder syntax `${placeholder}` which will be replaced using certain values depending on the placeholder.
 
 To get started, we first have to create a new class extending the [Token] class and add the necessary constructor:
@@ -341,13 +341,102 @@ In this final example are we doing a lot of things.
 First of all are we creating a new [DefaultExpressionParserEngine] using the Builder's `createDefault()` static method. This gives us an instance of the Builder with default [TokenReaders][TokenReader], [Operators][Operator] and [ValueReaders][ValueReader] already applied.  
 When then add our own [TokenReader] and [ValueReader] to the Builder before building it, creating the [DefaultExpressionParserEngine].
 
-Finally are we using this engine instance in a `parse` method, creating a [ParseWarnCollector] too.  
+Finally, are we using this engine instance in a `parse` method, creating a [ParseWarnCollector] too.  
 We simply call the engine's `compile` method to retrieve a [ExpressionTemplate] instance. At this point will we check the collector for if it has received any warnings and should this be the case, print them in our console.  
 Finally are we checking for the template to not be null. If it is, return false, else get the [ToBooleanExpression] instance it holds and call `evaluate()` to return the boolean value stored.
 
 You now have a working Placeholder token parser!
 
+## Adding own operators
+
+Operators are used to perform operations, as the name may suggest.  
+As an example in the expression `1 + 2` is `+` the operator.
+
+An operator is a [Token], just like normal tokens are, with the difference that a [Operator] instance is also created for it.
+
+In this example will we recreate the "contains" (`<_`) operator to use.  
+Unlike [custom tokens](#adding-own-tokens) can we just use the [Token] class itself for our Operator. In our example would this be a `new Token("CONTAINS")`.
+
+First, we have to create a new method that would be used when our operator is called. What you do in this method is completely up to you. Only thing to keep in mind is to have the method return an [ExpressionTemplate].  
+In our example are we creating a nested class that would be our ExpressionTemplate and a method that creates a new instance of this class:
+
+```java
+import ch.andre601.expressionparser.expressions.ToBooleanExpression;
+import ch.andre601.expressionparser.expressions.ToStringExpression;
+import ch.andre601.expressionparser.expressions.abstracted.AbstractBinaryToBooleanExpression;
+import ch.andre601.expressionparser.templates.ExpressionTemplate;
+import ch.andre601.expressionparser.templates.abstracted.AbstractBooleanExpressionTemplate;
+
+public class ExampleExpressions{
+    
+    public static ExpressionTemplate contains(ExpressionTemplate a, ExpressionTemplate b){
+        return new Contains(a, b);
+    }
+    
+    private static class Contains extends AbstractBooleanExpressionTemplate{
+        
+        private final ExpressionTemplate a;
+        private final ExpressionTemplate b;
+        
+        public Contains(ExpressionTemplate a, ExpressionTemplate b){
+            this.a = a;
+            this.b = b;
+        }
+        
+        @Override
+        public ToBooleanExpression returnBooleanExpression(){
+            ToStringExpression expressionA = a.returnStringExpression();
+            ToStringExpression expressionB = b.returnStringExpression();
+            
+            return new AbstractBinaryToBooleanExpression<>(expressionA, expressionB){
+                @Override
+                public boolean evaluate(){
+                    return expressionA.evaluate().contains(expressionB.evaluate());
+                }
+            };
+        }
+    }
+}
+```
+
+This is a lot to take in, so lets go over it step by step.
+
+The `Contains` class is what is important here. It extends the [AbstractBooleanExpressionTemplate], which implements the [ExpressionTemplate] interface and overrides the `returnDoubleExpression()` and `returnStringExpression()` to return whatever value `toBooleanExpression()` returns.  
+We created a constructor that accepts two ExpressionTemplates, a and b, which would be the content to the left and right of our operator characters respectively.  
+The `returnBooleanExpression()` method is overriden here due to it not being overriden in the AbstractBooleanExpressionTemplate. In it do we first get the [ToStringExpression] instances of each ExpressionTemplate.  
+We then create a new [AbstractBinaryToBooleanExpression] instance. This abstract class accepts two Objects implementing the [Expression] interface. We give it our two expressions as constructor values and then call their `evaluate()` method to return their String outputs and use a simple `contains` call here to see if String a contains String b.
+
+Our next step is to add our operator as such to the Parser, so that it will be used and recognized.  
+Assuming the [DefaultExpressionParserEngine] is used would it look something similar to this:
+
+```java
+import ch.andre601.expressionparser.DefaultExpressionParserEngine;
+import ch.andre601.expressionparser.operator.Operator;
+import ch.andre601.expressionparser.tokens.Token;
+import ch.andre601.expressionparser.tokens.readers.PatternTokenReader;
+
+public class ConditionParser{
+    
+    private final Token contains = new Token("CONTAINS");
+    private final DefaultExpressionParserEngine engine;
+    
+    public ConditionParser(){
+        engine = new DefaultExpressionParserEngine.DefaultBuilder().createDefault()
+            .addTokenReader(new PatternTokenReader(contains, "<_"))
+            .addOperator(contains, Operator.of(25, ExampleExpressions::contains))
+            .build();
+    }
+}
+```
+
+We add our contains token using the [PatternTokenReader] to associate `<_` with our token while also using the token to associate with a new [Operator] instance.  
+The `Operator.of` method accepts a priority and a function with two ExpressionTemplates. Since our `contains` method only needs two can we use a reference call here.
+
+With this, you have successfully added a contains operator!
+
 [ToBooleanExpression]: ./src/main/java/ch/andre601/expressionparser/expressions/ToBooleanExpression.java
 [ToDoubleExpression]: ./src/main/java/ch/andre601/expressionparser/expressions/ToDoubleExpression.java
 [ToStringExpression]: ./src/main/java/ch/andre601/expressionparser/expressions/ToStringExpression.java
 [ConstantExpressionTemplate]: ./src/main/java/ch/andre601/expressionparser/templates/ConstantExpressionTemplate.java
+[AbstractBinaryToBooleanExpression]: ./src/main/java/ch/andre601/expressionparser/expressions/abstracted/AbstractBinaryToBooleanExpression.java
+[Expression]: ./src/main/java/ch/andre601/expressionparser/expressions/Expression.java
