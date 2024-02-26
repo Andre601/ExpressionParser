@@ -1,5 +1,9 @@
 # ExpressionParser
 
+> [!IMPORTANT]
+> This repository has been archived and therefore won't receive any updates in the future.
+> To still receive updates (And for a better way of using this library with Maven/Gradle) check the new [Codeberg Repository](https://codeberg.org/Andre601/ExpressionParser).
+
 ExpressionParser is a copy of the original expression parser made by [@CodeCrafter47][CodeCrafter47] for the [TabOverlayCommon] project used by his plugins [BungeeTabListPlus] and [AdvancedTabOverlay] and shared with his permission.
 
 It allows you to parse simple to complex expressions using Tokenization, while also allowing you to further extend and customize it.
